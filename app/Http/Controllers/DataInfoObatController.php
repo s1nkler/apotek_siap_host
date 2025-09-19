@@ -29,10 +29,32 @@ class DataInfoObatController extends Controller
         return view('LamanAdmin.buatDataInfoObat', compact('infoobat'));
     }
 
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'gol_obat' => 'required|unique:informasi_obats,gol_obat,' . $id,
+    //         'deskripsi' => 'required',
+    //     ], [
+    //         'gol_obat.required' => 'Golongan obat wajib diisi.',
+    //         'gol_obat.unique' => 'Golongan obat sudah ada.',
+    //         'deskripsi.required' => 'Deskripsi wajib diisi.',
+    //     ]);
+
+    //     try {
+    //         InformasiObat::create($request->all());
+    //         Session::flash('success', "Berhasil menambahkan data informasi golongan obat ({$request->gol_obat})!");
+    //         return redirect()->route('infoObat.index');
+    //     } catch (\Exception $e) {
+    //         Session::flash('error', "Terjadi kesalahan: " . $e->getMessage());
+    //         return redirect()->back()->withInput();
+    //     }
+    // }
+
     public function store(Request $request)
     {
         $request->validate([
-            'gol_obat' => 'required|unique:informasi_obats,gol_obat,' . $id,
+            // The ', . $id' has been removed from this line
+            'gol_obat' => 'required|unique:informasiobat,gol_obat',
             'deskripsi' => 'required',
         ], [
             'gol_obat.required' => 'Golongan obat wajib diisi.',
@@ -41,7 +63,7 @@ class DataInfoObatController extends Controller
         ]);
 
         try {
-            //InformasiObat::create($request->all());
+            InformasiObat::create($request->all());
             Session::flash('success', "Berhasil menambahkan data informasi golongan obat ({$request->gol_obat})!");
             return redirect()->route('infoObat.index');
         } catch (\Exception $e) {
@@ -99,7 +121,7 @@ class DataInfoObatController extends Controller
 
         try {
             $infoObat = InformasiObat::findOrFail($id);
-            //$infoObat->update($request->all());
+            $infoObat->update($request->all());
             Session::flash('success', "Berhasil memperbarui data informasi golongan obat ({$infoObat->gol_obat})!");
             return redirect()->route('infoObat.index');
         } catch (\Exception $e) {
@@ -114,7 +136,7 @@ class DataInfoObatController extends Controller
         try {
             $infoObat = InformasiObat::findOrFail($id);
             Session::flash('success', "Berhasil menghapus data informasi golongan obat ({$infoObat->gol_obat})!");
-            //$infoObat->delete();
+            $infoObat->delete();
         } catch (\Exception $e) {
             Session::flash('error', "Terjadi kesalahan: " . $e->getMessage());
         }

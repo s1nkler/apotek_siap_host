@@ -51,7 +51,7 @@ class DataUsulObatController extends Controller
             $data['status'] = '';
             $data['tgl_pesan'] = now();
 
-            //UsulanPengadaan::create($data);
+            UsulanPengadaan::create($data);
             Session::flash('success', "Berhasil menambahkan data usulan pengadaan obat!");
             return redirect()->route('usulObat.index');
         } catch (\Exception $e) {
@@ -116,7 +116,7 @@ class DataUsulObatController extends Controller
 
         try {
             $usulanPengadaan = UsulanPengadaan::findOrFail($id);
-            //$usulanPengadaan->update($request->all());
+            $usulanPengadaan->update($request->all());
             Session::flash('success', "Berhasil memperbarui data usulan pengadaan obat!");
             return redirect()->route('usulObat.index');
         } catch (\Exception $e) {
@@ -130,7 +130,7 @@ class DataUsulObatController extends Controller
     {
         try {
             $usulanPengadaan = UsulanPengadaan::findOrFail($id);
-            //$usulanPengadaan->delete();
+            $usulanPengadaan->delete();
             Session::flash('success', "Berhasil menghapus data usulan pengadaan obat!");
         } catch (\Exception $e) {
             Session::flash('error', "Terjadi kesalahan: " . $e->getMessage());

@@ -52,7 +52,7 @@ class DataPenggunaController extends Controller
         try {
             $user = new User($request->all());
             $user->password = bcrypt($request->password);
-            //$user->save();
+            $user->save();
 
             Session::flash('success', "Berhasil menambahkan data pengguna dengan nama ({$request->nama})!");
             return redirect()->route('pengguna.index');
@@ -128,7 +128,7 @@ class DataPenggunaController extends Controller
             }
             $user->telfon = $request->telfon;
             $user->alamat = $request->alamat;
-            //$user->save();
+            $user->save();
 
             Session::flash('success', "Berhasil memperbarui data pengguna dengan nama ({$user->nama})!");
             return redirect()->route('pengguna.index');
@@ -142,7 +142,7 @@ class DataPenggunaController extends Controller
     {
         try {
             $user = User::findOrFail($id);
-            //$user->delete();
+            $user->delete();
             Session::flash('success', "Berhasil menghapus data pengguna ({$user->nama})!");
         } catch (\Exception $e) {
             Session::flash('error', "Terjadi kesalahan: " . $e->getMessage());

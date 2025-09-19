@@ -30,7 +30,14 @@ class DataObatController extends Controller
 
     public function store(Request $request)
     {
+        // Debug log untuk memastikan data masuk
+        \Log::info('Data diterima dari form:', $request->all());
+
         $request->validate([
+            'id_infobat' => [
+                'required',
+                \Illuminate\Validation\Rule::exists('informasiobat', 'id'),
+            ],
             'nama_obat' => 'required',
             'harga_beli' => 'required|numeric',
             'harga_jual' => 'required|numeric',
@@ -39,6 +46,8 @@ class DataObatController extends Controller
             'tgl_masuk' => 'required|date',
             'kode_obat' => 'required|unique:obat,kode_obat',
         ], [
+            'id_infobat.required' => 'Golongan obat wajib dipilih.',
+            'id_infobat.exists'   => 'Golongan obat tidak ditemukan di database.',
             'nama_obat.required' => 'Nama obat wajib diisi.',
             'harga_beli.required' => 'Harga beli wajib diisi.',
             'harga_beli.numeric' => 'Harga beli harus berupa angka.',
@@ -55,16 +64,26 @@ class DataObatController extends Controller
         ]);
 
         try {
-            $obat = new Obat($request->all());
-            //$obat->save();
+            $obat = new Obat();
+            $obat->id_infobat = $request->id_infobat;
+            $obat->nama_obat = $request->nama_obat;
+            $obat->harga_beli = $request->harga_beli;
+            $obat->harga_jual = $request->harga_jual;
+            $obat->stok = $request->stok;
+            $obat->tgl_kadaluarsa = $request->tgl_kadaluarsa;
+            $obat->tgl_masuk = $request->tgl_masuk;
+            $obat->kode_obat = $request->kode_obat;
+            $obat->save();
 
             Session::flash('success', "Berhasil menambahkan data obat dengan nama ({$request->nama_obat})!");
             return redirect()->route('obat.index');
         } catch (\Exception $e) {
+            \Log::error('Gagal menyimpan obat:', ['error' => $e->getMessage()]);
             Session::flash('error', "Terjadi kesalahan: " . $e->getMessage());
             return redirect()->back()->withInput();
         }
     }
+
 
     public function search(Request $request)
     {
@@ -78,7 +97,9 @@ class DataObatController extends Controller
         $obats = Obat::where('nama_obat', 'LIKE', "%{$keyword}%")
                      ->paginate(5);
 
-        return view('LamanAdmin.buatDataObat', compact('obats'));
+        $infoobat = InformasiObat::all();
+
+        return view('LamanAdmin.buatDataObat', compact('obats', 'infoobat'));
     }
 
     public function edit($id)
@@ -107,6 +128,7 @@ class DataObatController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'id_infobat' => 'required|exists:informasiobat,id',
             'nama_obat' => 'required',
             'harga_beli' => 'required|numeric',
             'harga_jual' => 'required|numeric',
@@ -115,6 +137,8 @@ class DataObatController extends Controller
             'tgl_masuk' => 'required|date',
             'kode_obat' => 'required|unique:obat,kode_obat,' . $id,
         ], [
+            'id_infobat.required' => 'Golongan obat wajib dipilih.',
+            'id_infobat.exists' => 'Golongan obat tidak valid.',
             'nama_obat.required' => 'Nama obat wajib diisi.',
             'harga_beli.required' => 'Harga beli wajib diisi.',
             'harga_beli.numeric' => 'Harga beli harus berupa angka.',
@@ -132,14 +156,15 @@ class DataObatController extends Controller
 
         try {
             $obat = Obat::findOrFail($id);
-            $obat->nama_obat = $request->nama_obat;
-            $obat->harga_beli = $request->harga_beli;
-            $obat->harga_jual = $request->harga_jual;
-            $obat->stok = $request->stok;
+            $obat->id_infobat   = $request->id_infobat;
+            $obat->nama_obat    = $request->nama_obat;
+            $obat->harga_beli   = $request->harga_beli;
+            $obat->harga_jual   = $request->harga_jual;
+            $obat->stok         = $request->stok;
             $obat->tgl_kadaluarsa = $request->tgl_kadaluarsa;
-            $obat->tgl_masuk = $request->tgl_masuk;
-            $obat->kode_obat = $request->kode_obat;
-            //$obat->save();
+            $obat->tgl_masuk    = $request->tgl_masuk;
+            $obat->kode_obat    = $request->kode_obat;
+            $obat->save();
 
             Session::flash('success', "Berhasil memperbarui data obat dengan nama ({$obat->nama_obat})!");
             return redirect()->route('obat.index');
@@ -153,8 +178,9 @@ class DataObatController extends Controller
     {
         try {
             $obat = Obat::findOrFail($id);
-            //$obat->delete();
-            Session::flash('success', "Berhasil menghapus data obat ({$obat->nama_obat})!");
+            $nama = $obat->nama_obat;
+            $obat->delete();
+            Session::flash('success', "Berhasil menghapus data obat ({$nama})!");
         } catch (\Exception $e) {
             Session::flash('error', "Terjadi kesalahan: " . $e->getMessage());
         }

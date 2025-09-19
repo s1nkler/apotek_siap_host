@@ -48,7 +48,7 @@ class PenjualanController extends Controller
             $penjualan->resep = $request->resep;
             $penjualan->dokter_resep = $request->dokter_resep;
             $penjualan->telp_pembeli = $request->telp_pembeli;
-            //$penjualan->save();
+            $penjualan->save();
 
             Session::flash('success', "Berhasil menambahkan data penjualan!");
             return redirect()->route('home');
@@ -96,7 +96,7 @@ class PenjualanController extends Controller
 
         try {
             $penjualan = Penjualan::findOrFail($id);
-            //$penjualan->update($request->all());
+            $penjualan->update($request->all());
             Session::flash('success', "Berhasil memperbarui data penjualan!");
             return redirect()->route('penjualan.index');
         } catch (\Exception $e) {

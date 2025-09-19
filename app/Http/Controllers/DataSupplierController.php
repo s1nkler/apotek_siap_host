@@ -44,7 +44,7 @@ class DataSupplierController extends Controller
         ]);
 
         try {
-            //Suplier::create($request->all());
+            Suplier::create($request->all());
             Session::flash('success', "Berhasil menambahkan data supplier dengan nama ({$request->nama_suplier})!");
             return redirect()->route('supplier.index');
         } catch (\Exception $e) {
@@ -105,7 +105,7 @@ class DataSupplierController extends Controller
 
         try {
             $supplier = Suplier::findOrFail($id);
-            //$supplier->update($request->all());
+            $supplier->update($request->all());
             Session::flash('success', "Berhasil memperbarui data supplier dengan nama ({$supplier->nama_suplier})!");
             return redirect()->route('supplier.index');
         } catch (\Exception $e) {
@@ -119,7 +119,7 @@ class DataSupplierController extends Controller
         try {
             $supplier = Suplier::findOrFail($id);
             Session::flash('success', "Berhasil menghapus data supplier ({$supplier->nama_suplier})!");
-            //$supplier->delete();
+            $supplier->delete();
         } catch (\Exception $e) {
             Session::flash('error', "Terjadi kesalahan: " . $e->getMessage());
         }

@@ -50,8 +50,8 @@ class VerifikasiUsulPengadaanController extends Controller
         try {
             $usulanPengadaan = UsulanPengadaan::findOrFail($id);
             $usulanPengadaan->status = strtolower($request->verif) == 'terima' ? 'Y' : 'N';
-            //$usulanPengadaan->update($request->all());
-            //$usulanPengadaan->save();
+            $usulanPengadaan->update($request->all());
+            $usulanPengadaan->save();
             Session::flash('success', "Berhasil memperbarui data usulan pengadaan obat!");
             return redirect()->route('verifikasiUsulPengadaan.index');
         } catch (\Exception $e) {

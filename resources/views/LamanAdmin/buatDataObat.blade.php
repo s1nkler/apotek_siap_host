@@ -85,7 +85,7 @@
                 <div class="row mb-3">
                     <label for="golongan" class="col-sm-4 col-form-label text-end">Golongan :</label>
                     <div class="col-sm-6">
-                        <select id="golongan" name="golongan" class="form-select" onchange="updateDeskripsi()">
+                        <select id="id_infobat" name="id_infobat" class="form-select" onchange="updateDeskripsi()">
                             <option value="" disabled selected>Pilih Golongan</option>
                             @foreach ($infoobat as $info)
                                 <option value="{{ $info->id }}" data-deskripsi="{{ $info->deskripsi }}">{{ $info->gol_obat }}</option>
@@ -171,7 +171,7 @@
 
 <script>
     function updateDeskripsi() {
-        var select = document.getElementById('golongan');
+        var select = document.getElementById('id_infobat');
         var deskripsi = select.options[select.selectedIndex].getAttribute('data-deskripsi');
         document.getElementById('deskripsi_obat').value = deskripsi;
     }
